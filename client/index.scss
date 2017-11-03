@@ -1,0 +1,48 @@
+html, body {
+  height: 100%;
+}
+html, body, p, h1, h2, h3, ul, li, ol, dl, dt, dd {
+  margin: 0;
+  padding:0;
+}
+
+ul, ol, dl {
+  list-style-type: none;
+}
+
+/* box.css */
+.box {
+  display: -webkit-box;
+  width: 100%;
+
+  /* demo.css */
+  .demo {
+    -webkit-box-flex: 1;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 18px 0 0 0;
+    box-sizing: border-box;
+    li {
+      a {
+        text-decoration: none;
+        color: #FFF;
+        padding: 8px 0 8px 25px;
+        display: block;
+
+        &:hover {
+          background: rgba(0, 0, 200, 1)
+        }
+      }
+    }
+  }
+
+  /* content.css */
+  .content {
+    -webkit-box-flex: 4;
+    padding: 20px;
+  }
+}
+
+
+
+

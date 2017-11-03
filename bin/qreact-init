@@ -1,0 +1,89 @@
+#!/usr/bin/env node
+const fs = require('fs')
+const path = require('path')
+const ora = require('ora')  // loading
+const unzip = require('unzip')  // 解压缩
+const rimraf = require('rimraf')  // 删除
+const download = require('download')  // 下载
+const inquirer = require('inquirer')  // 用户输入命令行
+const checkNodeDone = require('../lib/check-version.js')  // 判断版本
+const shimScript = require('../lib/shim.script.js') // 配置文件
+const help = require('../lib/help.js')  // 安装完成后帮助文件
+const configParam = require('../lib/configParam.js')
+
+const log = (...value) => console.log(...value)
+
+class Qreact {
+  constructor(props) {
+    this.projectURL = configParam.versionURL
+    this.rname = configParam.fileName
+    this.inquirer()
+    this.isRimraf = false
+  }
+
+  // 设置浏览器配置文件
+  setFileType ({ projectName, browser }) {
+    browser = browser.toLocaleLowerCase()
+    browser = browser === 'ie8' ? `ReactIE.js` : `React.js`
+    fs.writeFileSync(path.join(__dirname, projectName, 'anu-config.js'), shimScript(browser))
+  }
+
+  // 修改zip解压后文件夹的名字为用户自定义项目名
+  renameZipName ([projectName, answers]) {
+    fs.rename('yapi-1.1.1', projectName, () => {
+      if (!this.isRimraf) {
+        this.isRimraf = true
+        this.setFileType(answers)
+        log()
+        log()
+        log(configParam.message.success)
+        help(log)
+      }
+    })
+  }
+
+  // 删除ZIP文件
+  rimrafFiles ([rname, spinner]) {
+    // 删除文件
+    rimraf(path.join(__dirname, rname), err => {
+      spinner.stop()
+      if (!this.isRimraf) {
+        this.isRimraf = true
+      }
+    })
+  }
+
+  downProject (answers) {
+    const spinner = ora(configParam.message.start)
+    const { projectName = '', browser = 'w3c' } = answers
+    let { projectURL, rname } = this
+    spinner.start()
+    download(projectURL, './').then(() => {
+      let readStream = fs.createReadStream(rname)
+      readStream.on('data', (chunk) => {
+        fs.createReadStream(rname).pipe(unzip.Extract({ path: './' })).on('close', () => {
+          this.renameZipName([projectName, answers])
+          this.rimrafFiles([rname, spinner])
+        })
+      })
+    })
+  }
+
+  inquirer () {
+    /**
+     *  type: 文本命令行
+     *  key: 返回值key名称
+     *  message: 命令行文本
+    */
+
+    inquirer.prompt(configParam.questions).then(answers => {
+      this.downProject(answers)
+    });
+  }
+}
+
+// node版本错误 错误提示
+if ( checkNodeDone() ) {
+  new Qreact()
+}
+
