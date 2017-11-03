@@ -1,17 +1,18 @@
 #!/usr/bin/env node
 const fs = require('fs')
 const path = require('path')
-const ora = require('ora')  // loading
-const unzip = require('unzip')  // 解压缩
-const rimraf = require('rimraf')  // 删除
-const download = require('download')  // 下载
-const inquirer = require('inquirer')  // 用户输入命令行
-const checkNodeDone = require('../lib/check-version.js')  // 判断版本
-const shimScript = require('../lib/shim.script.js') // 配置文件
-const help = require('../lib/help.js')  // 安装完成后帮助文件
+const ora = require('ora')                               // Loading
+const unzip = require('unzip')                           // 解压缩
+const rimraf = require('rimraf')                         // 删除
+const download = require('download')                     // 下载
+const inquirer = require('inquirer')                     // 用户输入命令行
+const child_process = require('child_process');          // 命令行复制文件
+const checkNodeDone = require('../lib/check-version.js') // 判断版本
+const shimScript = require('../lib/shim.script.js')      // 配置文件
+const help = require('../lib/help.js')                   // 安装完成后帮助文件
 const configParam = require('../lib/configParam.js')
-
 const log = (...value) => console.log(...value)
+
 
 class Qreact {
   constructor(props) {
@@ -21,16 +22,21 @@ class Qreact {
     this.isRimraf = false
   }
 
+  copyDir (src, dist) {
+    child_process.spawn('cp', ['-r', src, dist])
+  }
+
   // 设置浏览器配置文件
   setFileType ({ projectName, browser }) {
     browser = browser.toLocaleLowerCase()
     browser = browser === 'ie8' ? `ReactIE.js` : `React.js`
+    // 创建引入IE W3C版本的qreact文件
     fs.writeFileSync(path.join(__dirname, projectName, 'anu-config.js'), shimScript(browser))
   }
 
   // 修改zip解压后文件夹的名字为用户自定义项目名
   renameZipName ([projectName, answers]) {
-    fs.rename('yapi-1.1.1', projectName, () => {
+    fs.rename('./QuReact-master', projectName, () => {
       if (!this.isRimraf) {
         this.isRimraf = true
         this.setFileType(answers)
@@ -38,6 +44,7 @@ class Qreact {
         log()
         log(configParam.message.success)
         help(log)
+        this.copyDir(`./${projectName}`, `../../${projectName}`);
       }
     })
   }
@@ -45,7 +52,7 @@ class Qreact {
   // 删除ZIP文件
   rimrafFiles ([rname, spinner]) {
     // 删除文件
-    rimraf(path.join(__dirname, rname), err => {
+    rimraf(path.join(__dirname, `../../${rname}`), err => {
       spinner.stop()
       if (!this.isRimraf) {
         this.isRimraf = true
@@ -58,12 +65,15 @@ class Qreact {
     const { projectName = '', browser = 'w3c' } = answers
     let { projectURL, rname } = this
     spinner.start()
-    download(projectURL, './').then(() => {
-      let readStream = fs.createReadStream(rname)
+    download(projectURL, '../../').then(() => {
+      let readStream = fs.createReadStream(`../${rname}`)
       readStream.on('data', (chunk) => {
-        fs.createReadStream(rname).pipe(unzip.Extract({ path: './' })).on('close', () => {
+        // 解压缩
+        fs.createReadStream(`../${rname}`).pipe(unzip.Extract({ path: './'})).on('close', () => {
+          // 修改解压缩项目名
           this.renameZipName([projectName, answers])
-          this.rimrafFiles([rname, spinner])
+          // 删除压缩包
+          this.rimrafFiles(['QuReact-master.zip', spinner])
         })
       })
     })
