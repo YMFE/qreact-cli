@@ -5,7 +5,7 @@
 * nodejs（7.6+)
 
 ## 安装
-1. npm i -g qreact-cli
+1. npm i -g @qnpm/qreact-cli
 2. qreact-init 初始化安装项目
 (1)  输入项目名
 (2)  选择浏览器类型 系统会根据选择浏览器类型 配置引入的React文件
