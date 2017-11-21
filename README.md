@@ -5,12 +5,12 @@
 * nodejs（7.6+)
 
 ## 安装
-<p>npm i -g @qnpm/qreact-cli</p>
-<p>qreact-init 初始化安装项目</p>
-<p>输入项目名</p>
-<p>选择浏览器类型 系统会根据选择浏览器类型 配置引入的React文件</p>
-<p>npm install 安装依赖模块</p>
-<p>npm run start 启动项目 打开浏览器 输入 http://localhost:8081/ 打开项目</p>
-<p>运行 qreact 显示帮助信息</p>
-<p>npm run build 编译项目</p>
+<p>1. npm i -g @qnpm/qreact-cli 全局安装qreact-cli</p>
+<p>2. qreact-init 初始化安装项目</p>
+<p>3. 输入项目名</p>
+<p>4. 选择浏览器类型 系统会根据选择浏览器类型 配置引入的React文件</p>
+<p>5. npm install 安装依赖模块</p>
+<p>6. npm run start 启动项目 打开浏览器 输入 http://localhost:8081/ 打开项目</p>
+<h3>运行 qreact 显示帮助信息</h3>
+<h3>npm run build 编译项目</h3>
 
