@@ -31,12 +31,12 @@ class Qreact {
     browser = browser.toLocaleLowerCase()
     browser = browser === 'ie8' ? `ReactIE.js` : `React.js`
     // 创建引入IE W3C版本的qreact文件
-    fs.writeFileSync(path.join(__dirname, projectName, 'anu-config.js'), shimScript(browser))
+    fs.writeFileSync(path.join(__dirname, projectName, 'client/src/Containers/Public.js'), shimScript(browser))
   }
 
   // 修改zip解压后文件夹的名字为用户自定义项目名
   renameZipName ([projectName, answers]) {
-    fs.rename('./anu-template-v0.1.1', projectName, () => {
+    fs.rename('./anu-template-anu-template-v0.1.1', projectName, () => {
       if (!this.isRimraf) {
         this.isRimraf = true
         this.setFileType(answers)
@@ -73,7 +73,7 @@ class Qreact {
           // 修改解压缩项目名
           this.renameZipName([projectName, answers])
           // 删除压缩包
-          this.rimrafFiles(['anu-template-v0.1.1.zip', spinner])
+          this.rimrafFiles(['anu-template-anu-template-v0.1.1.zip', spinner])
         })
       })
     })
