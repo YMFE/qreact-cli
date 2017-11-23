@@ -29,9 +29,9 @@ class Qreact {
   // 设置浏览器配置文件
   setFileType ({ projectName, browser }) {
     browser = browser.toLocaleLowerCase()
-    browser = browser === 'ie8' ? `ReactIE.js` : `React.js`
+    browser = browser === `ie8` ? `ReactIE.js` : `React.js`
     // 创建引入IE W3C版本的qreact文件
-    fs.writeFileSync(path.join(__dirname, projectName, 'client/src/Containers/Public.js'), shimScript(browser))
+    fs.writeFileSync(path.join(`./${projectName}/client/src`, configParam.public), shimScript(browser))
   }
 
   // 修改zip解压后文件夹的名字为用户自定义项目名
@@ -44,7 +44,7 @@ class Qreact {
         log()
         log(configParam.message.success)
         help(log)
-        // this.copyDir(`./${projectName}`, `./${projectName}`);
+        // this.copyDir(`./${projectName}`, `../../${projectName}`);
       }
     })
   }
@@ -52,7 +52,7 @@ class Qreact {
   // 删除ZIP文件
   rimrafFiles ([rname, spinner]) {
     // 删除文件
-    rimraf(path.join(__dirname, `./${rname}`), err => {
+    rimraf(path.join(`./${rname}`), err => {
       spinner.stop()
       if (!this.isRimraf) {
         this.isRimraf = true
@@ -66,10 +66,10 @@ class Qreact {
     let { projectURL, rname } = this
     spinner.start()
     download(projectURL, './').then(() => {
-      let readStream = fs.createReadStream(`./${rname}`)
+      let readStream = fs.createReadStream(`${rname}`)
       readStream.on('data', (chunk) => {
         // 解压缩
-        fs.createReadStream(`./${rname}`).pipe(unzip.Extract({ path: './'})).on('close', () => {
+        fs.createReadStream(`${rname}`).pipe(unzip.Extract({ path: './'})).on('close', () => {
           // 修改解压缩项目名
           this.renameZipName([projectName, answers])
           // 删除压缩包
