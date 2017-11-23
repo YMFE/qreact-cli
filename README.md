@@ -9,10 +9,11 @@ Node.js（> = 4.x)，npm版本3+
 ## 安装
 1. `npm install qreact-cli -g` // 全局安装 QReact-Cli
 2. 运行 `qreact init` // 初始化QReact项目
-<div style="margin: 10px 0 10px 0px">![安装步骤](images/q1.png)</div>
-3. `npm install` // 进入项目安装依赖包
-4. `npm run start ` // 启动开发环境
-5. 访问 `http://localhost:8081/ ` // 打开项目
+3. 输入您自定义的项目名称
+4. 选择您需要兼容的浏览器最低版本
+5. `npm install` // 进入项目安装依赖包
+6. `npm run start ` // 启动开发环境
+7. 访问 `http://localhost:8081/ ` // 打开项目
 
 ## 帮助命令
 运行 `qreact` 显示帮助信息
